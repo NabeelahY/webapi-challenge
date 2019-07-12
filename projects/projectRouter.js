@@ -1,7 +1,7 @@
 const express = require("express");
 const Project = require("../data/helpers/projectModel");
 const router = express.Router();
-const { validateProject } = require("../middleware");
+const { validateProject, validateProjectId } = require("../middleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -22,6 +22,19 @@ router.post("/", validateProject, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error creating project"
+    });
+  }
+});
+
+router.put("/:id", validateProjectId, async (req, res) => {
+  try {
+    const { name, description } = req.body;
+    await Project.update(req.params.id, { name, description  });
+    const editedProject = await Project.get(req.params.id);
+    res.status(200).json(editedProject);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error editing the project"
     });
   }
 });
