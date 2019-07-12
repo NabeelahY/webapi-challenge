@@ -24,18 +24,24 @@ async function validateAction(req, res, next) {
 }
 
 async function validateActionId(req, res, next) {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  if (isNaN(Number(id))) {
-    return res.status(400).json({ message: "IDs should be a numerical value" });
-  }
+    if (isNaN(Number(id))) {
+      return res
+        .status(400)
+        .json({ message: "IDs should be a numerical value" });
+    }
 
-  const action = await Action.get(id);
-
-  if (!action) {
-    return res.status(404).json({ message: "Action ID does not exist" });
-  } else {
-    req.action = action;
-    next();
+    const action = await Action.get(id);
+    console.log(action);
+    if (!Object.keys(action).length) {
+      return res.status(404).json({ message: "Action ID does not exist" });
+    } else {
+      req.action = action;
+      next();
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
