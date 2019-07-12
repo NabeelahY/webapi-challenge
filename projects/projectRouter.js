@@ -37,7 +37,7 @@ router.get("/:id/actions", projectMiddleware.validateProjectId, async (req, res)
   }
 });
 
-router.post("/", projectMiddleware.validateProject, async (req, res) => {
+router.post("/:id", projectMiddleware.validateProject, async (req, res) => {
   try {
     const { body } = req;
     const newProject = await Project.insert(body);

@@ -1,7 +1,7 @@
 const express = require("express");
 const Action = require("../data/helpers/actionModel");
 const router = express.Router();
-const {actionMiddleware}  = require("../middleware");
+const { actionMiddleware } = require("../middleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -15,15 +15,28 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", actionMiddleware.validateActionId, async (req, res) => {
-    try {
-      const { id } = req.params;
-      const action = await Action.get(id);
-      res.status(200).json(action);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving action"
-      });
-    }
-  });
+  try {
+    const { id } = req.params;
+    const action = await Action.get(id);
+    res.status(200).json(action);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving action"
+    });
+  }
+});
+
+router.post("/", actionMiddleware.validateAction, async (req, res) => {
+  try {
+    const { id } = req.params;
+    // const { description, notes } = req.body;
+    const newAction = await Action.insert(req.body);
+    res.status(201).json(newAction);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error creating action"
+    });
+  }
+});
 
 module.exports = router;
