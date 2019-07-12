@@ -43,9 +43,20 @@ router.put("/:id", actionMiddleware.validateActionId, async (req, res) => {
     const editedAction = await Action.get(req.params.id);
     res.status(200).json(editedAction);
   } catch (error) {
-      console.log(error)
     res.status(500).json({
       message: "Error editing the action"
+    });
+  }
+});
+
+router.delete("/:id", actionMiddleware.validateActionId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Action.remove(id);
+    res.status(200).json({ deleted_action: req.action });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting the action"
     });
   }
 });
