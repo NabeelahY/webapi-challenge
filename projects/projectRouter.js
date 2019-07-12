@@ -14,6 +14,18 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", validateProjectId, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const projects = await Project.get(id);
+      res.status(200).json(projects);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving projects"
+      });
+    }
+  });
+
 router.post("/", validateProject, async (req, res) => {
   try {
     const { body } = req;
@@ -29,7 +41,7 @@ router.post("/", validateProject, async (req, res) => {
 router.put("/:id", validateProjectId, async (req, res) => {
   try {
     const { name, description } = req.body;
-    await Project.update(req.params.id, { name, description  });
+    await Project.update(req.params.id, { name, description });
     const editedProject = await Project.get(req.params.id);
     res.status(200).json(editedProject);
   } catch (error) {
