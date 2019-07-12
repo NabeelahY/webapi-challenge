@@ -25,6 +25,17 @@ router.get("/:id", validateProjectId, async (req, res) => {
     });
   }
 });
+router.get("/:id/actions", validateProjectId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const actions = await Project.getProjectActions(id);
+    res.status(200).json(actions);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving project actions"
+    });
+  }
+});
 
 router.post("/", validateProject, async (req, res) => {
   try {

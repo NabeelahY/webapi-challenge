@@ -26,7 +26,7 @@ async function validateProjectId(req, res, next) {
     const project = await Project.get(id);
   
     if (!project) {
-      return res.status(404).json({ message: "Invalid project id" });
+      return res.status(404).json({ message: "Project ID does not exist" });
     } else {
       req.project = project;
       next();
