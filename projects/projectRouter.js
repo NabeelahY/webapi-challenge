@@ -15,16 +15,16 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", validateProjectId, async (req, res) => {
-    try {
-      const { id } = req.params;
-      const projects = await Project.get(id);
-      res.status(200).json(projects);
-    } catch (error) {
-      res.status(500).json({
-        message: "Error retrieving projects"
-      });
-    }
-  });
+  try {
+    const { id } = req.params;
+    const projects = await Project.get(id);
+    res.status(200).json(projects);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error retrieving projects"
+    });
+  }
+});
 
 router.post("/", validateProject, async (req, res) => {
   try {
@@ -47,6 +47,18 @@ router.put("/:id", validateProjectId, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error editing the project"
+    });
+  }
+});
+
+router.delete("/:id", validateProjectId, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Project.remove(id);
+    res.status(200).json({ deleted_project: req.project });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting the project"
     });
   }
 });
