@@ -1,7 +1,7 @@
 const express = require("express");
 const Project = require("../data/helpers/projectModel");
 const router = express.Router();
-const { validateProject, validateProjectId } = require("../middleware");
+const {projectMiddleware}  = require("../middleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", validateProjectId, async (req, res) => {
+router.get("/:id", projectMiddleware.validateProjectId, async (req, res) => {
   try {
     const { id } = req.params;
     const projects = await Project.get(id);
@@ -25,7 +25,7 @@ router.get("/:id", validateProjectId, async (req, res) => {
     });
   }
 });
-router.get("/:id/actions", validateProjectId, async (req, res) => {
+router.get("/:id/actions", projectMiddleware.validateProjectId, async (req, res) => {
   try {
     const { id } = req.params;
     const actions = await Project.getProjectActions(id);
@@ -37,7 +37,7 @@ router.get("/:id/actions", validateProjectId, async (req, res) => {
   }
 });
 
-router.post("/", validateProject, async (req, res) => {
+router.post("/", projectMiddleware.validateProject, async (req, res) => {
   try {
     const { body } = req;
     const newProject = await Project.insert(body);
@@ -49,7 +49,7 @@ router.post("/", validateProject, async (req, res) => {
   }
 });
 
-router.put("/:id", validateProjectId, async (req, res) => {
+router.put("/:id", projectMiddleware.validateProjectId, async (req, res) => {
   try {
     const { name, description } = req.body;
     await Project.update(req.params.id, { name, description });
@@ -62,7 +62,7 @@ router.put("/:id", validateProjectId, async (req, res) => {
   }
 });
 
-router.delete("/:id", validateProjectId, async (req, res) => {
+router.delete("/:id", projectMiddleware.validateProjectId, async (req, res) => {
   try {
     const { id } = req.params;
     await Project.remove(id);

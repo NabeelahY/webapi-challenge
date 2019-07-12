@@ -16,6 +16,7 @@ Go code!
 const express = require("express");
 
 const projectRoutes = require("./projects/projectRouter");
+const actionRoutes = require("./actions/actionsRouter");
 
 const server = express();
 
@@ -31,6 +32,8 @@ function logger(req, res, next) {
 server.use(logger);
 
 server.use("/api/projects", projectRoutes);
+server.use("/api/actions", actionRoutes);
+
 
 server.get("/", (req, res) => {
   res.send(`<h2>Let's write some middleware!</h2>`);
