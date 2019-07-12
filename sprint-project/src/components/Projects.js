@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Projects = () => {
   const [projects, setProject] = useState([]);
@@ -15,7 +16,9 @@ const Projects = () => {
   return (
     <div>
       {projects.map(project => (
-        <div key={project.id}>{project.name}</div>
+        <div key={project.id}>
+          <Link to={`/project/${project.id}`}>{project.name}</Link>
+        </div>
       ))}
     </div>
   );
