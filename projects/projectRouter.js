@@ -1,7 +1,8 @@
 const express = require("express");
 const Project = require("../data/helpers/projectModel");
+const Action = require("../data/helpers/actionModel");
 const router = express.Router();
-const {projectMiddleware}  = require("../middleware");
+const { projectMiddleware, actionMiddleware } = require("../middleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -25,17 +26,43 @@ router.get("/:id", projectMiddleware.validateProjectId, async (req, res) => {
     });
   }
 });
-router.get("/:id/actions", projectMiddleware.validateProjectId, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const actions = await Project.getProjectActions(id);
-    res.status(200).json(actions);
-  } catch (error) {
-    res.status(500).json({
-      message: "Error retrieving project actions"
-    });
+router.get(
+  "/:id/actions",
+  projectMiddleware.validateProjectId,
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const actions = await Project.getProjectActions(id);
+      res.status(200).json(actions);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error retrieving project actions"
+      });
+    }
   }
-});
+);
+
+router.post(
+  "/:id/actions",
+  projectMiddleware.validateProjectId,
+  actionMiddleware.validateAction,
+  async (req, res) => {
+    const { id } = req.params;
+    const { description, notes } = req.body;
+    try {
+      const postAction = await Action.insert({
+        project_id: id,
+        description,
+        notes
+      });
+      res.status(201).json(postAction);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error creating action"
+      });
+    }
+  }
+);
 
 router.post("/:id", projectMiddleware.validateProject, async (req, res) => {
   try {
