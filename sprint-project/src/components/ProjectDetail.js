@@ -16,6 +16,15 @@ const ProjectDetail = props => {
     <div>
       <h1>{project.name}</h1>
       <div>{project.description}</div>
+      <h3>Actions</h3>
+      <div>
+        {project.actions &&
+          project.actions.map(action => (
+            <div key={action.id}>
+              <div>{action.description}</div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
