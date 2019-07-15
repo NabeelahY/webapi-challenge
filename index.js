@@ -12,3 +12,40 @@ I need this code, just don't know where, perhaps should make some middleware, do
 
 Go code!
 */
+
+const express = require("express");
+
+const projectRoutes = require("./projects/projectRouter");
+const actionRoutes = require("./actions/actionsRouter");
+
+const server = express();
+const cors = require("cors");
+
+server.use(express.json());
+server.use(cors());
+server.use(express.urlencoded({ extended: true }));
+
+function logger(req, res, next) {
+  console.log(`[${new Date().toISOString()}] ${req.method} to ${req.url}`);
+
+  next();
+}
+
+server.use(logger);
+
+server.use("/api/projects", projectRoutes);
+server.use("/api/actions", actionRoutes);
+
+server.get("/", (req, res) => {
+  res.send(`<h2>Let's write some middleware!</h2>`);
+});
+
+server.all("*", (req, res) => {
+  res.status(404).json({ message: "Incorrect Route" });
+});
+
+server.listen(5000, () => {
+  console.log(`*** Server Running on http://localhost:5000 ***`);
+});
+
+module.exports = server;
